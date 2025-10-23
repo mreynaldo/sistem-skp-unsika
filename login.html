@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - Sistem SKP UNSIKA</title>
+    <link rel="stylesheet" href="css/login.css" />
+  </head>
+  <body>
+    <div class="login-container">
+      <div class="login-card">
+        <div class="login-header">
+          <div class="logo">
+            <img
+              src="assets/log-unsika.png"
+              alt="Logo UNSIKA"
+              class="logo-img"
+            />
+            <div class="logo-text">
+              <h1>Sistem SKP UNSIKA</h1>
+              <p>Silakan masuk menggunakan akun Anda</p>
+            </div>
+          </div>
+        </div>
+
+        <form class="login-form" id="login-form">
+          <div class="form-group">
+            <label>Email</label>
+            <input
+              type="email"
+              class="form-control"
+              placeholder="Masukkan email"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input
+              type="password"
+              class="form-control"
+              placeholder="Masukkan password"
+              required
+            />
+            <!-- Tambahan link lupa password -->
+            <div class="forgot-wrapper">
+              <a href="forgot-password.html" class="forgot-password"
+                >Lupa password?</a
+              >
+            </div>
+          </div>
+
+          <button type="submit" class="btn-login">Login</button>
+          <div class="divider"><span>atau</span></div>
+          <button type="button" class="btn-google" id="google-login">Login dengan Google</button>
+        </form>
+
+        <div class="login-footer">
+          <p>Belum punya akun? <a href="register.html">Daftar</a></p>
+        </div>
+      </div>
+    </div>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="js/login.js"></script>
+  </body>
+</html>

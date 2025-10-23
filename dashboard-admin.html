@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard Admin - SKP UNSIKA</title>
+    <link rel="stylesheet" href="css/dashboard-admin.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <div class="logo">
+            <i class="fas fa-graduation-cap"></i>
+            <h2>Admin SKP</h2>
+          </div>
+        </div>
+        <nav>
+          <ul>
+            <li class="active">
+              <a href="#overview" class="nav-link">
+                <i class="fas fa-chart-pie"></i>
+                <span>Overview</span>
+              </a>
+            </li>
+            <li>
+              <a href="#students" class="nav-link">
+                <i class="fas fa-users"></i>
+                <span>Mahasiswa</span>
+              </a>
+            </li>
+            <li>
+              <a href="#pending" class="nav-link">
+                <i class="fas fa-clock"></i>
+                <span>Pending Approval</span>
+                <span class="badge" id="pending-badge">0</span>
+              </a>
+            </li>
+            <li>
+              <a href="#skp-management" class="nav-link">
+                <i class="fas fa-clipboard-list"></i>
+                <span>Manajemen Poin SKP</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+        <div class="sidebar-footer">
+          <button id="logout-btn" class="logout-btn">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+          </button>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="main-header">
+          <div class="header-left">
+            <button class="menu-toggle" id="menu-toggle">
+              <i class="fas fa-bars"></i>
+            </button>
+            <div class="header-title">
+              <h1>Dashboard Admin</h1>
+              <p class="current-date" id="current-date"></p>
+            </div>
+          </div>
+          <div class="header-right">
+            <div class="theme-switch-wrapper">
+              <label class="theme-switch" for="theme-checkbox">
+                <input type="checkbox" id="theme-checkbox" />
+                <div class="slider round">
+                  <i class="fas fa-sun sun-icon"></i>
+                  <i class="fas fa-moon moon-icon"></i>
+                </div>
+              </label>
+            </div>
+            <div class="notification-icon">
+              <i class="fas fa-bell"></i>
+              <span class="notification-badge" id="notification-badge">0</span>
+            </div>
+            <div class="admin-profile">
+              <div class="avatar">
+                <i class="fas fa-user-shield"></i>
+              </div>
+              <div class="admin-info">
+                <p class="admin-name">Admin SKP</p>
+                <p class="admin-role">Administrator</p>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <!-- Overview -->
+        <section id="overview" class="content-section active">
+          <h2 class="section-title">Statistik Global</h2>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-users"></i>
+              </div>
+              <div class="stat-info">
+                <h3 id="total-students">0</h3>
+                <p>Total Mahasiswa</p>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-tasks"></i>
+              </div>
+              <div class="stat-info">
+                <h3 id="total-activities">0</h3>
+                <p>Total Kegiatan</p>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-clock"></i>
+              </div>
+              <div class="stat-info">
+                <h3 id="pending-activities">0</h3>
+                <p>Kegiatan Pending</p>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-check-circle"></i>
+              </div>
+              <div class="stat-info">
+                <h3 id="approved-activities">0</h3>
+                <p>Kegiatan Approved</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="charts-container">
+            <div class="chart-card">
+              <h3>Distribusi Poin Mahasiswa</h3>
+              <canvas id="pointsChart"></canvas>
+            </div>
+            <div class="chart-card">
+              <h3>Status Kegiatan</h3>
+              <canvas id="statusChart"></canvas>
+            </div>
+          </div>
+        </section>
+
+        <!-- Mahasiswa -->
+        <section id="students" class="content-section">
+          <div class="section-header">
+            <h2 class="section-title">Daftar Mahasiswa</h2>
+            <div class="search-box">
+              <i class="fas fa-search"></i>
+              <input
+                type="text"
+                id="student-search"
+                placeholder="Cari mahasiswa..."
+              />
+            </div>
+          </div>
+          <div class="students-cards" id="students-cards"></div>
+        </section>
+
+        <!-- Pending -->
+        <section id="pending" class="content-section">
+          <div class="section-header">
+            <h2 class="section-title">Kegiatan Pending Approval</h2>
+            <div class="table-actions">
+              <button class="action-btn" id="approve-all">
+                <i class="fas fa-check-double"></i>
+                Approve Semua
+              </button>
+            </div>
+          </div>
+          <div class="table-container">
+            <table id="pending-table">
+              <thead>
+                <tr>
+                  <th>Nama Mahasiswa</th>
+                  <th>Deskripsi Kegiatan</th>
+                  <th>Kategori & Tingkat</th>
+                  <th>Poin Diajukan</th>
+                  <th>Tgl. Kegiatan</th>
+                  <th>Bukti</th>
+                  <th>Tgl. Pengajuan</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!--SKP MANAGE-->
+        <section id="skp-management" class="content-section">
+          <div class="section-header">
+            <h2 class="section-title">Manajemen Poin SKP</h2>
+            <div class="table-controls">
+              <div class="filter-controls">
+                <div class="filter-group">
+                  <i class="fas fa-filter"></i>
+                  <span>Filter By: </span>
+                  <span>Jenis Kegiatan</span>
+                  <select id="filter-kegiatan" class="filter-select">
+                    <option value="all">Semua Kegiatan</option>
+                  </select>
+                  <span>Tingkatan</span>
+                  <select id="filter-tingkat" class="filter-select">
+                    <option value="all">Semua Tingkat</option>
+                  </select>
+                </div>
+              </div>
+              <div class="table-actions">
+                <button class="action-btn" id="add-skp-point-btn">
+                  <i class="fas fa-plus"></i>
+                  Tambah Poin Baru
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="table-container">
+            <table id="skp-points-table">
+              <thead>
+                <tr>
+                  <th>Kegiatan</th>
+                  <th>Tingkat</th>
+                  <th>Bobot Poin</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+      <div id="toast-container"></div>
+
+      <div class="modal-overlay" id="confirmation-modal-overlay">
+        <div class="modal-box">
+          <h3 class="modal-title">Konfirmasi Tindakan</h3>
+          <p class="modal-message">Apakah Anda yakin?</p>
+          <div class="modal-actions">
+            <button class="btn-modal btn-cancel" id="modal-cancel-btn">
+              Batal
+            </button>
+            <button class="btn-modal btn-confirm" id="modal-confirm-btn">
+              Yakin
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="pdf-modal" class="modal-overlay">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Pratinjau Dokumen Bukti</h2>
+          <button id="close-modal-btn" class="close-button">&times;</button>
+        </div>
+        <div class="modal-body">
+          <iframe
+            id="pdf-viewer"
+            src=""
+            frameborder="0"
+            width="100%"
+            height="100%"
+          ></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="skp-modal-overlay">
+      <div class="modal-box">
+        <h3 class="modal-title" id="skp-modal-title">Tambah Poin SKP Baru</h3>
+        <form id="skp-form">
+          <input type="hidden" id="skp-point-id" name="id" />
+
+          <div class="modal-form-group autocomplete-container">
+            <label for="kegiatan">Nama Kegiatan</label>
+            <input
+              type="text"
+              id="kegiatan"
+              name="kegiatan"
+              required
+              autocomplete="off"
+            />
+            <div
+              id="kegiatan-suggestions"
+              class="autocomplete-suggestions"
+            ></div>
+          </div>
+          <div class="modal-form-group">
+            <label for="tingkat">Tingkat</label>
+            <input
+              type="text"
+              id="tingkat"
+              name="tingkat"
+              required
+              autocomplete="off"
+            />
+          </div>
+          <div class="modal-form-group">
+            <label for="bobot_poin">Bobot Poin</label>
+            <input type="number" id="bobot_poin" name="bobot_poin" required />
+          </div>
+
+          <div class="modal-actions">
+            <button
+              type="button"
+              class="btn-modal btn-cancel"
+              id="skp-modal-cancel-btn"
+            >
+              Batal
+            </button>
+            <button type="submit" class="btn-modal btn-confirm">Simpan</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <script src="js/dashboard-admin.js"></script>
+  </body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register - Sistem SKP UNSIKA</title>
+    <link rel="stylesheet" href="css/register.css" />
+  </head>
+  <body>
+    <div class="register-container">
+      <div class="register-card">
+        <div class="register-header">
+          <div class="logo">
+            <!-- Menata gambar dan teks di dalam container .logo -->
+            <img
+              src="assets/log-unsika.png"
+              alt="Logo UNSIKA"
+              class="logo-img"
+            />
+            <div class="logo-text">
+              <h1>Daftar Akun</h1>
+              <p>Buat akun baru untuk mengakses Sistem SKP UNSIKA</p>
+            </div>
+          </div>
+        </div>
+
+        <form class="register-form" id="register-form">
+          <div class="form-group">
+            <label>Nama Lengkap</label>
+            <div class="input-wrapper">
+              <input
+                type="text"
+                id="name"
+                class="form-control"
+                placeholder="Masukkan nama lengkap"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Email</label>
+            <div class="input-wrapper">
+              <input
+                type="email"
+                id="email"
+                class="form-control"
+                placeholder="Masukkan email"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="form-group password-wrapper">
+            <label>Password</label>
+            <input
+              type="password"
+              id="password"
+              class="form-control"
+              placeholder="Masukkan password"
+              required
+            />
+            <span class="toggle-password" data-target="password">👁</span>
+          </div>
+
+          <div class="form-group password-wrapper">
+            <label>Konfirmasi Password</label>
+            <input
+              type="password"
+              id="confirm-password"
+              class="form-control"
+              placeholder="Ulangi password"
+              required
+            />
+            <span class="toggle-password" data-target="confirm-password"
+              >👁</span
+            >
+          </div>
+
+          <button type="submit" class="btn-register">Daftar</button>
+
+          <div class="divider"><span>atau</span></div>
+          <button type="button" class="btn-google">Daftar dengan Google</button>
+
+          <div class="register-footer">
+            <p>Sudah punya akun? <a href="login.html">Login</a></p>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="js/register.js"></script>
+  </body>
+</html>

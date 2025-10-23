@@ -1,0 +1,1259 @@
+:root {
+  --maroon-primary: #800020;
+  --maroon-secondary: #5a0017;
+  --gold: #d4af37;
+  --white: #ffffff;
+  --light-bg: #f9f5f6;
+  --text-dark: #333333;
+  --gray: #6c757d;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --green-status: #28a745;
+  --orange-status: #fd7e14;
+  --red-status: #dc3545;
+}
+
+/* Base Styles */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: var(--light-bg);
+  color: var(--text-dark);
+}
+
+.dashboard-container {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 250px;
+  background: linear-gradient(160deg, var(--maroon-primary), var(--maroon-secondary));
+  color: var(--white);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar-header {
+  padding: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
+}
+
+.logo-text h2 {
+  margin: 0;
+  font-size: 1.3rem;
+  color: var(--gold);
+}
+
+.logo-text p {
+  margin: 5px 0 0;
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+
+.sidebar-nav {
+  flex-grow: 1;
+  padding: 10px 0;
+}
+
+.sidebar-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-nav .nav-item {
+  margin: 5px 10px;
+}
+
+.sidebar-nav .nav-link {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 12px 20px;
+  color: var(--white);
+  text-decoration: none;
+  border-radius: 8px;
+  transition: background 0.3s, color 0.3s;
+  font-weight: 500;
+}
+
+.sidebar-nav .nav-link:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-nav .nav-item.active .nav-link {
+  background: var(--gold);
+  color: var(--maroon-secondary);
+  font-weight: bold;
+}
+
+.nav-icon {
+  font-size: 1.3rem;
+}
+
+.sidebar-footer {
+  padding: 20px;
+}
+
+.btn-logout {
+  width: 100%;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: var(--white);
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+  transition: background 0.3s, border-color 0.3s;
+}
+
+.btn-logout:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--gold);
+}
+
+/* Main Content Area */
+.main-content {
+  flex: 1;
+  margin-left: 250px;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.content-header {
+  padding: 0px 30px;
+  background: var(--white);
+  border-bottom: 1px solid #e9ecef;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#page-title {
+  margin-bottom: 0;
+  /* Hapus jarak bawah dari H1 */
+}
+
+#page-subtitle {
+  margin-top: 4px;
+  /* Beri jarak atas yang sedikit (4px) dari judul */
+  margin-bottom: 1rem;
+  /* Hapus juga jarak bawah dari paragraf */
+  color: var(--gray);
+  /* Menyeragamkan warna dengan variabel yang ada */
+}
+
+.user-menu {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  /* Opsional: Membuat teks rata kanan */
+}
+
+.user-name {
+  font-weight: 600;
+  line-height: 1.2;
+  /* Mengatur jarak vertikal antar baris */
+}
+
+.user-role {
+  font-size: 0.85rem;
+  color: var(--gray);
+  line-height: 1.2;
+  /* Mengatur jarak vertikal antar baris */
+}
+
+.user-avatar {
+  background: var(--maroon-primary);
+  color: var(--white);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.content-area {
+  padding: 10px 30px 30px;
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+.content-section {
+  display: none;
+}
+
+.content-section.active {
+  display: block;
+}
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 25px;
+}
+
+/* ================================================= */
+/* ===== GANTI KODE LAMA DENGAN BLOK BARU INI ====== */
+/* ================================================= */
+
+/* Aturan GABUNGAN untuk SEMUA KARTU agar gayanya sama */
+.stat-card {
+  background: var(--white);
+  border-radius: 12px;
+  padding: 25px;
+  /* KEMBALI KE PADDING ASLI: 25px di semua sisi */
+  box-shadow: var(--shadow);
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+  border-left: 5px solid var(--maroon-primary);
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Aturan SPESIFIK yang hanya berlaku untuk kartu statistik atas */
+.stat-card {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.stat-icon {
+  font-size: 2.5rem;
+  color: var(--maroon-light);
+}
+
+.stat-info h3 {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--gray);
+}
+
+.stat-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--maroon-secondary);
+}
+
+.stat-change {
+  font-size: 0.85rem;
+  color: var(--gray);
+  margin-top: 5px;
+}
+
+/* Aturan untuk GRID BAWAH */
+.overview-details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 25px;
+  margin-top: 1rem;
+  /* BARU: Menambahkan jarak atas 2rem (sekitar 32px) */
+}
+
+.details-card {
+  background: var(--white);
+  border-radius: 12px;
+  padding: 5px 25px 25px;
+  /* PADDING ATAS 5px: Sesuai permintaan Anda */
+  box-shadow: var(--shadow);
+  transition: transform 0.3s, box-shadow 0.3s;
+  border-left: 5px solid var(--maroon-primary);
+}
+
+.details-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.details-card h3 {
+  font-size: 1.2rem;
+  color: var(--text-dark);
+  border-bottom: 1px solid #e9ecef;
+  padding-bottom: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+/* Styling Daftar Ajuan Terbaru */
+.recent-submissions .submission-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.recent-submissions .submission-item:last-child {
+  border-bottom: none;
+}
+
+.submission-info p {
+  margin: 0;
+  font-weight: 500;
+}
+
+.submission-info small {
+  color: var(--text-secondary);
+}
+
+.submission-status {
+  text-align: right;
+}
+
+.submission-status .points {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--maroon-primary);
+}
+
+/* Styling untuk Circular Progress Bar  */
+.progress-circle-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.progress-circle {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background-color: var(--light-bg);
+  transition: background 0.5s;
+  border: 4px solid #e0e0e0;
+  ;
+}
+
+.progress-value {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background-color: transparent;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.progress-value span {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: white;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.progress-circle.is-complete {
+  background: #27ae60;
+}
+
+.progress-circle.is-complete .progress-value span {
+  color: white;
+}
+
+.progress-label {
+  margin-bottom: 0;
+  /* Hapus margin bawah dari teks "0 / 250 Poin" */
+}
+
+.progress-info {
+  margin-top: 8px;
+  /* Beri jarak atas yang sedikit (8px) untuk teks "Memuat progress..." */
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+#print-report-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* SKP Submission Form (NEW STYLES) */
+.submission-container {
+  max-width: 700px;
+  margin: auto;
+  background: var(--white);
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+}
+
+.skp-form .form-group {
+  margin-bottom: 1rem;
+}
+
+.skp-form label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--maroon-secondary);
+}
+
+.skp-form .form-control {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.skp-form .form-control:focus {
+  outline: none;
+  border-color: var(--maroon-light);
+  box-shadow: 0 0 0 3px rgba(128, 0, 32, 0.1);
+}
+
+.skp-form input[type="file"] {
+  padding: 10px;
+}
+
+/* Styling untuk Kartu Filter di Halaman Riwayat */
+.filter-grid {
+  margin-bottom: 2rem;
+}
+
+.filter-card {
+  cursor: pointer;
+  opacity: 0.6;
+  /* Buat kartu non-aktif terlihat sedikit redup */
+  transition: opacity 0.3s, border-color 0.3s;
+}
+
+.filter-card.active,
+.filter-card:hover {
+  opacity: 1;
+  /* Buat kartu aktif atau yang di-hover terlihat jelas */
+}
+
+.filter-card.active {
+  border-left-color: var(--gold);
+  /* Beri tanda warna emas pada kartu yang aktif */
+}
+
+/* Modifier warna untuk setiap kartu status */
+.card-approved {
+  border-left-color: var(--green-status);
+}
+
+.card-pending {
+  border-left-color: var(--orange-status);
+}
+
+.card-rejected {
+  border-left-color: var(--red-status);
+}
+
+/* History List (UPDATED STYLES) */
+/* BARU: Mencegah header tabel agar tidak wrap (turun baris) */
+.history-table th {
+  white-space: nowrap;
+  /* Memaksa teks header tetap dalam satu baris */
+}
+
+/* BARU: Mengatur kolom 'Kegiatan' agar teksnya bisa 'turun' dengan rapi */
+.history-table tbody td:nth-child(2) {
+  /* Biarkan teks yang panjang di kolom ini turun baris jika perlu */
+  white-space: normal;
+  word-break: break-word;
+  /* Memaksa kata yang sangat panjang untuk dipotong agar tidak merusak layout */
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.history-item {
+  background: var(--white);
+  border-radius: 10px;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 20px;
+  align-items: center;
+  box-shadow: var(--shadow);
+  transition: box-shadow 0.3s;
+}
+
+.history-item:hover {
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
+}
+
+.history-icon {
+  font-size: 1.8rem;
+}
+
+.history-details h4 {
+  margin: 0 0 5px;
+  font-size: 1.1rem;
+}
+
+.history-meta, .history-points, .history-date {
+  font-size: 0.9rem;
+  color: var(--gray);
+}
+
+.history-points {
+  font-weight: 500;
+}
+
+.history-status {
+  font-weight: bold;
+  font-size: 0.9rem;
+  padding: 5px 12px;
+  border-radius: 20px;
+  color: var(--white);
+  text-align: center;
+}
+
+.history-status.approved {
+  background-color: var(--green-status);
+}
+
+.history-status.pending {
+  background-color: var(--orange-status);
+}
+
+.history-status.rejected {
+  background-color: var(--red-status);
+}
+
+/* Profile Section */
+.profile-layout-container {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.profile-container,
+.account-actions-container {
+  flex: 1;
+  padding: 20px;
+  border-radius: 12px;
+  background: var(--white);
+  box-shadow: var(--shadow);
+  border: 1px solid #e0e0e0;
+}
+
+.profile-container {
+  flex: 2;
+}
+
+.account-actions-container {
+  flex: 1;
+}
+
+.profile-info {
+  flex-grow: 1;
+  min-width: 0;
+}
+
+.profile-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px 30px;
+}
+
+.profile-details .detail-group.full-width {
+  grid-column: 1 / -1;
+}
+
+#profile-form label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: var(--maroon-secondary);
+}
+
+/* Aturan untuk SEMUA input KOTAK (NIM, Fakultas, dll) */
+.form-control-profile {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  color: var(--text-dark);
+  background-color: var(--white);
+}
+
+/* Aturan SPESIFIK hanya untuk input NAMA */
+.form-control-profile-name {
+  width: 96%;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  border-radius: 0;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  /* Garis bawah tipis default */
+  background-color: transparent;
+  padding: 12px 10px;
+  transition: border-color 0.3s ease;
+}
+
+/* Aturan FOKUS untuk input KOTAK */
+.form-control-profile:focus {
+  outline: none;
+  border-color: var(--maroon-light);
+  box-shadow: 0 0 0 3px rgba(128, 0, 32, 0.1);
+}
+
+/* Aturan FOKUS untuk input NAMA */
+.form-control-profile-name:focus {
+  outline: none;
+  box-shadow: none;
+  border-bottom-color: var(--maroon-primary);
+  /* Ubah warna garis bawah saat fokus */
+}
+
+/* Aturan untuk input yang tidak bisa diubah (email) */
+.form-control-profile[readonly] {
+  background-color: #e9ecef;
+  cursor: not-allowed;
+}
+
+#profile-form .detail-group:last-child {
+  margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+  .profile-details {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+}
+
+.profile-avatar {
+  font-size: 3rem;
+  width: 80px;
+  height: 80px;
+  /* other styles */
+}
+
+#profile-form:not(.is-editing) .form-control-profile,
+#profile-form:not(.is-editing) .form-control-profile-name {
+  background-color: transparent;
+  border-color: transparent;
+  padding-left: 2px;
+  padding-right: 2px;
+  cursor: default;
+  pointer-events: none;
+  /* Mencegah interaksi pada select */
+}
+
+#profile-form:not(.is-editing) .form-control-profile-name {
+  padding-left: 0;
+}
+
+/* Sembunyikan/Tampilkan tombol berdasarkan mode */
+#profile-form:not(.is-editing) #edit-profile-btn {
+  display: inline-block;
+}
+
+#profile-form:not(.is-editing) #save-profile-btn,
+#profile-form:not(.is-editing) #cancel-edit-btn {
+  display: none;
+}
+
+#profile-form.is-editing #edit-profile-btn {
+  display: none;
+}
+
+#profile-form.is-editing #save-profile-btn,
+#profile-form.is-editing #cancel-edit-btn {
+  display: inline-block;
+}
+
+.profile-actions {
+  display: flex;
+  gap: 10px;
+}
+
+
+/* ========================================================= */
+/* ===== BARU: Styling untuk Kartu Tindakan Akun ===== */
+/* ========================================================= */
+
+/* Judul Utama Kartu ('Tindakan Akun') */
+.account-actions-container h3 {
+  font-size: 1.2rem;
+  color: var(--text-dark);
+  padding-bottom: 0.75rem;
+  margin-top: 0; /* Hapus margin atas default dari h3 */
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+/* Wadah untuk setiap baris aksi (misal: baris Ubah Password) */
+.action-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 1rem 0;
+  border-bottom: 1px solid #e9ecef; /* Garis pemisah antar aksi */
+}
+
+/* Hapus garis pemisah di item terakhir */
+.action-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+/* Bagian info teks (judul dan deskripsi) */
+.action-info h4 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.action-info p {
+  margin: 4px 0 0;
+  font-size: 0.9rem;
+  color: var(--gray);
+  line-height: 1.5;
+}
+
+/* Styling untuk tombol sekunder (yang tidak berbahaya) */
+.btn-secondary {
+  background-color: #f8f9fa;
+  color: var(--text-dark);
+  border: 1px solid #dee2e6;
+  white-space: nowrap; /* Mencegah teks tombol turun baris */
+}
+
+.btn-secondary:hover {
+  background-color: #e9ecef;
+}
+
+
+/* Utility Classes */
+.btn {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: transform 0.2s;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn-primary {
+  background: var(--maroon-primary);
+  color: var(--white);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+    width: 220px;
+    transition: transform 0.3s ease;
+  }
+
+  /* Add a class to body when sidebar is open */
+  body.sidebar-open .sidebar {
+    transform: translateX(0);
+  }
+
+  .main-content {
+    margin-left: 0;
+  }
+
+  .stats-grid, .charts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .content-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}
+
+/* Styling untuk Tabel Riwayat (Versi Baru) */
+.history-table-container {
+  background-color: #ffffff;
+  /* BARU: Memberi latar belakang putih solid */
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  overflow-x: auto;
+}
+
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* OPSI LANJUTAN: Rata tengah tapi kolom Kegiatan tetap rata kiri */
+.history-table tbody td {
+  vertical-align: middle;
+  /* Posisikan semua sel ke tengah secara vertikal */
+}
+
+/* Atur kolom spesifik agar rata tengah secara horizontal */
+/* No(1), Poin(3), Tanggal(4), Status(5), Keterangan(6) */
+.history-table tbody td:nth-child(1),
+.history-table tbody td:nth-child(3),
+.history-table tbody td:nth-child(4),
+.history-table tbody td:nth-child(5),
+.history-table tbody td:nth-child(6) {
+  text-align: center;
+}
+
+/* Biarkan kolom Kegiatan (kolom ke-2) tetap rata kiri agar mudah dibaca */
+.history-table tbody td:nth-child(2) {
+  text-align: left;
+}
+
+.history-table th, .history-table td {
+  padding: 1rem 1.5rem;
+  text-align: left;
+  border-bottom: 1px solid #e9ecef;
+  /* Garis tipis antar baris */
+}
+
+.history-table th {
+  background-color: #f8f6f7;
+  font-weight: 600;
+  color: #6c757d;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  text-align: center;
+  /* BARU: Tulisan di header menjadi rata tengah */
+  /* BARU: Garis tebal di bawah header untuk memisahkan dari body */
+  border-bottom: 2px solid #800020;
+}
+
+.history-table tr:last-child td {
+  border-bottom: none;
+}
+
+.history-table tr:hover {
+  background-color: #f8f6f7;
+}
+
+.history-table td .kegiatan-title {
+  font-weight: 600;
+  color: #333333;
+}
+
+.history-table td .kegiatan-category {
+  font-size: 0.85rem;
+  color: #6c757d;
+  display: block;
+}
+
+/* Status badge (jika belum ada atau ingin disesuaikan) */
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-weight: 600;
+  color: #fff;
+  text-transform: capitalize;
+  font-size: 0.8rem;
+}
+
+/* Styling untuk catatan penolakan di tabel */
+.rejection-note {
+  font-size: 0.85rem;
+  color: #721c24;
+  /* Merah gelap */
+  font-style: italic;
+  max-width: 250px;
+  /* Batasi lebar agar tidak terlalu panjang */
+  white-space: normal;
+  /* Izinkan teks untuk wrap */
+}
+
+.status-pending {
+  background-color: #f39c12;
+}
+
+.status-approved {
+  background-color: #27ae60;
+}
+
+.status-rejected {
+  background-color: #e74c3c;
+}
+
+/* ========================================================= */
+/* ===== BARU: Styling untuk Sistem Notifikasi ===== */
+/* ========================================================= */
+
+.notification-container {
+  position: relative;
+  /* Penting untuk positioning panel */
+}
+
+.notification-bell {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.5rem;
+  position: relative;
+  padding: 5px;
+}
+
+#notification-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: var(--red-status);
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 0.7rem;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid var(--white);
+}
+
+.notification-panel {
+  display: none;
+  /* Sembunyi secara default */
+  position: absolute;
+  top: 120%;
+  /* Posisi di bawah lonceng */
+  right: 0;
+  width: 350px;
+  max-height: 400px;
+  background-color: var(--white);
+  border-radius: 8px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+  z-index: 101;
+  overflow: hidden;
+  flex-direction: column;
+}
+
+.notification-panel.active {
+  display: flex;
+  /* Tampilkan panel saat aktif */
+}
+
+.panel-header {
+  padding: 1rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.panel-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.notification-list {
+  overflow-y: auto;
+  flex-grow: 1;
+}
+
+.notification-item {
+  display: flex;
+  gap: 15px;
+  padding: 1rem;
+  border-bottom: 1px solid #e9ecef;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  position: relative;
+}
+
+.notification-item:hover {
+  background-color: #f8f9fa;
+}
+
+.notification-item:last-child {
+  border-bottom: none;
+}
+
+.notification-item.is-unread::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  background-color: #3498db;
+  border-radius: 50%;
+}
+
+.notification-icon {
+  font-size: 1.2rem;
+}
+
+.notification-icon.approved {
+  color: var(--green-status);
+}
+
+.notification-icon.rejected {
+  color: var(--red-status);
+}
+
+.notification-content p {
+  margin: 0;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.notification-content small {
+  color: var(--gray);
+  font-size: 0.8rem;
+}
+
+.empty-state {
+  padding: 2rem;
+  text-align: center;
+  color: var(--gray);
+}
+
+/* Styling untuk highlight baris tabel riwayat */
+.history-table tbody tr.highlight {
+  background-color: #fffbe6;
+  /* Kuning muda */
+  transition: background-color 0.5s ease;
+}
+
+.action-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.action-group:last-child {
+  border-bottom: none;
+}
+
+.action-group p {
+  margin: 0;
+}
+
+.action-group small {
+  color: var(--gray);
+}
+
+/* Styling untuk tombol berbahaya (sudah ada, tapi pastikan ada) */
+.btn-danger {
+  background-color: var(--red-status);
+  color: white;
+  white-space: nowrap; /* Mencegah teks tombol turun baris */
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(3px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-content {
+  background: var(--white);
+  border-radius: 12px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 500px;
+  transform: scale(0.9);
+  transition: transform 0.3s;
+}
+
+.modal-overlay.active .modal-content {
+  transform: scale(1);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem 0.5rem 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: var(--maroon-primary);
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  color: #aaa;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.close-button:hover {
+  color: var(--text-dark);
+}
+
+.modal-body {
+  padding: 0rem 1.5rem 0rem 1.5rem;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--border-color);
+  background-color: #f9f9f9;
+  border-radius: 0 0 12px 12px;
+}
+
+.password-input-wrapper {
+  position: relative;
+  /* Wadah menjadi acuan posisi untuk ikon */
+}
+
+.password-toggle-icon {
+  position: absolute;
+  /* Ikon diposisikan absolut terhadap wadah */
+  top: 50%;
+  right: 15px;
+  transform: translateY(-50%);
+  /* Trik untuk membuatnya pas di tengah vertikal */
+  color: var(--gray);
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.password-toggle-icon:hover {
+  color: var(--maroon-primary);
+}
+
+/* ========================================================= */
+/* ===== BARU: Styling untuk Section Informasi Poin SKP ===== */
+/* ========================================================= */
+
+/* Wadah utama untuk filter di atas tabel */
+.filter-container {
+  display: flex;
+  gap: 20px;
+  background-color: var(--white);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  margin-bottom: 1.5rem;
+}
+
+/* Grup untuk setiap elemen filter (ikon + input) */
+.filter-group {
+  flex: 1; /* Agar setiap grup filter memiliki lebar yang sama */
+  position: relative;
+}
+
+/* Ikon di dalam kotak filter */
+.filter-icon {
+  position: absolute;
+  top: 50%;
+  left: 15px;
+  transform: translateY(-50%);
+  color: var(--gray);
+}
+
+/* Styling umum untuk input pencarian & dropdown */
+.filter-input,
+.filter-select {
+  width: 100%;
+  padding: 12px 15px 12px 45px; /* Beri ruang kiri untuk ikon */
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  background-color: var(--white);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+/* Efek focus yang konsisten */
+.filter-input:focus,
+.filter-select:focus {
+  outline: none;
+  border-color: var(--maroon-primary);
+  box-shadow: 0 0 0 3px rgba(128, 0, 32, 0.1);
+}
+
+/* Menyesuaikan tampilan default dropdown */
+.filter-select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 16px 12px;
+}
+
+/* PERBAIKAN: Aturan khusus untuk membuat kolom ke-3 di tabel Informasi rata kiri */
+#information .history-table tbody td:nth-child(3) {
+  text-align: left;
+}
+
+.section-subtitle {
+  margin-bottom: 1rem;
+  color: var(--gray);
+  font-size: 1rem;
+}

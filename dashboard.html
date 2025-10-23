@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - Sistem SKP Unsika</title>
+    <!-- CORRECTED FILE PATH: Removed the leading "/" -->
+    <link rel="stylesheet" href="css/dashboard.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <div class="logo">
+            <div class="logo-icon"></div>
+            <div class="logo-text">
+              <h2>Unsika SKP</h2>
+              <p>Dashboard</p>
+            </div>
+          </div>
+        </div>
+
+        <nav class="sidebar-nav">
+          <ul>
+            <li class="nav-item active">
+              <a href="#overview" class="nav-link">
+                <span class="nav-icon">📊</span>
+                <span class="nav-text">Overview</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#submission" class="nav-link">
+                <span class="nav-icon">✍️</span>
+                <span class="nav-text">Pengajuan SKP</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#history" class="nav-link">
+                <span class="nav-icon">📝</span>
+                <span class="nav-text">Riwayat Pengajuan</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#profile" class="nav-link">
+                <span class="nav-icon">👤</span>
+                <span class="nav-text">Pengaturan Akun</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#information" class="nav-link">
+                <span class="nav-icon">📚</span>
+                <span class="nav-text">Panduan SKP</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+        <div class="sidebar-footer">
+          <button id="logout-btn" class="btn-logout">
+            <span class="nav-icon">🚪</span>
+            <span class="nav-text">Keluar</span>
+          </button>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <!-- Header -->
+        <header class="content-header">
+          <div class="header-left">
+            <h1 id="page-title">Dashboard Overview</h1>
+            <p id="page-subtitle">Selamat datang di Sistem SKP Unsika</p>
+          </div>
+          <div class="header-right">
+            <div class="user-menu">
+              <div class="user-info">
+                <span class="user-name" id="user-name">Loading...</span>
+                <span class="user-role" id="user-role">Mahasiswa</span>
+              </div>
+              <div class="user-avatar">👤</div>
+              <div class="notification-container">
+                <button id="notification-bell" class="notification-bell">
+                  <span>🔔</span>
+                  <span
+                    id="notification-badge"
+                    class="badge"
+                    style="display: none"
+                    >0</span
+                  >
+                </button>
+                <div id="notification-panel" class="notification-panel">
+                  <div class="panel-header">
+                    <h3>Notifikasi</h3>
+                  </div>
+                  <div id="notification-list" class="notification-list">
+                    <p class="empty-state">Tidak ada notifikasi baru.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <!-- Dashboard Content -->
+        <div class="content-area">
+          <!-- Overview Section -->
+          <section id="overview" class="content-section active">
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div class="stat-icon">💡</div>
+                <div class="stat-info">
+                  <h3>Perkiraan Total Poin</h3>
+                  <div class="stat-value" id="total-submitted-points">
+                    0 Poin
+                  </div>
+                  <p class="stat-change">Jika semua pengajuan disetujui</p>
+                </div>
+              </div>
+
+              <div class="stat-card">
+                <div class="stat-icon">⏳</div>
+                <div class="stat-info">
+                  <h3>Poin Sedang Diproses</h3>
+                  <div class="stat-value" id="pending-points">0 Poin</div>
+                  <p class="stat-change">Sedang diperiksa oleh admin</p>
+                </div>
+              </div>
+
+              <div class="stat-card">
+                <div class="stat-icon">🎯</div>
+                <div class="stat-info">
+                  <h3>Poin Resmi Anda</h3>
+                  <div class="stat-value" id="verified-points">0 Poin</div>
+                  <p class="stat-change">Telah divalidasi & disetujui</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="overview-details-grid">
+              <div class="details-card">
+                <h3>Ajuan Terbaru Anda</h3>
+                <div id="recent-submissions-list" class="recent-submissions">
+                  <p>Memuat data...</p>
+                </div>
+              </div>
+
+              <div class="details-card">
+                <div class="progress-circle-container">
+                  <h3>Progres Pencapaian Poin SKP</h3>
+                  <div class="skp-progress" id="progress-card-content">
+                    <div id="progress-circle" class="progress-circle">
+                      <div class="progress-value">
+                        <span id="progress-percentage-text">0%</span>
+                      </div>
+                    </div>
+                    <p class="progress-label" id="progress-points-label">
+                      0 / 250 Poin
+                    </p>
+                    <p class="progress-info" id="progress-info-text">
+                      Memuat progress...
+                    </p>
+                  </div>
+                  <button
+                    id="print-report-btn"
+                    class="btn btn-primary"
+                    style="display: none; margin-top: 1rem; width: 100%"
+                  >
+                    Cetak Laporan SKP
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- New Submission Section -->
+          <section id="submission" class="content-section">
+            <div class="submission-container">
+              <form
+                id="dashboard-skp-form"
+                class="skp-form"
+                enctype="multipart/form-data"
+              >
+                <div class="form-group">
+                  <label for="nama_kegiatan">Nama Kegiatan</label>
+                  <input
+                    type="text"
+                    id="nama_kegiatan"
+                    name="nama_kegiatan"
+                    class="form-control"
+                    placeholder="Contoh: Seminar Nasional AI 2025"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="penyelenggara">Penyelenggara</label>
+                  <input
+                    type="text"
+                    id="penyelenggara"
+                    name="penyelenggara"
+                    class="form-control"
+                    placeholder="Contoh: Himpunan Mahasiswa Teknik Informatika"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="tanggal_kegiatan">Tanggal Kegiatan</label>
+                  <input
+                    type="date"
+                    id="tanggal_kegiatan"
+                    name="tanggal_kegiatan"
+                    class="form-control"
+                    required
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="id_kategori">Kategori Prestasi</label>
+                  <select
+                    id="id_kategori"
+                    name="id_kategori"
+                    class="form-control"
+                    required
+                  >
+                    <option value="">Pilih Kategori</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="level_pencapaian">Level Pencapaian</label>
+                  <select
+                    id="level_pencapaian"
+                    name="level_pencapaian"
+                    class="form-control"
+                    required
+                  >
+                    <option value="">Pilih Level</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Bobot Poin SKP</label>
+                  <input
+                    type="text"
+                    id="bobot_poin_display"
+                    class="form-control"
+                    readonly
+                    placeholder="Poin akan tampil di sini"
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="bukti_sertifikat"
+                    >Bukti Sertifikat (PDF, JPG, PNG)</label
+                  >
+                  <input
+                    type="file"
+                    id="bukti_sertifikat"
+                    name="bukti_sertifikat"
+                    class="form-control"
+                    accept=".pdf,.jpg,.jpeg,.png"
+                    required
+                  />
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                  Ajukan Kegiatan
+                </button>
+              </form>
+            </div>
+          </section>
+
+          <!-- History Section -->
+          <section id="history" class="content-section">
+            <div class="stats-grid filter-grid">
+              <div class="stat-card filter-card active" data-filter="all">
+                <div class="stat-icon">🗂️</div>
+                <div class="stat-info">
+                  <h3>Semua Ajuan</h3>
+                  <div class="stat-value" id="history-count-all">0</div>
+                </div>
+              </div>
+              <div
+                class="stat-card filter-card card-approved"
+                data-filter="approved"
+              >
+                <div class="stat-icon">✅</div>
+                <div class="stat-info">
+                  <h3>Diterima</h3>
+                  <div class="stat-value" id="history-count-approved">0</div>
+                </div>
+              </div>
+              <div
+                class="stat-card filter-card card-pending"
+                data-filter="pending"
+              >
+                <div class="stat-icon">⏳</div>
+                <div class="stat-info">
+                  <h3>Pending</h3>
+                  <div class="stat-value" id="history-count-pending">0</div>
+                </div>
+              </div>
+              <div
+                class="stat-card filter-card card-rejected"
+                data-filter="rejected"
+              >
+                <div class="stat-icon">❌</div>
+                <div class="stat-info">
+                  <h3>Ditolak</h3>
+                  <div class="stat-value" id="history-count-rejected">0</div>
+                </div>
+              </div>
+            </div>
+            <div class="history-table-container">
+              <table class="history-table">
+                <thead>
+                  <tr>
+                    <th>No</th>
+                    <th>Kegiatan</th>
+                    <th>Poin</th>
+                    <th>Tanggal Pengajuan</th>
+                    <th>Status</th>
+                    <th>Keterangan</th>
+                  </tr>
+                </thead>
+                <tbody id="history-table-body"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- Profile Section -->
+          <section id="profile" class="content-section">
+            <div class="profile-layout-container">
+              <div class="profile-container">
+                <form id="profile-form">
+                  <div class="profile-header">
+                    <div class="profile-avatar">👤</div>
+                    <div class="profile-info">
+                      <label for="profile-name">Nama</label>
+                      <input
+                        type="text"
+                        id="profile-name"
+                        name="name"
+                        class="form-control-profile-name"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div class="profile-details">
+                    <div class="detail-group full-width">
+                      <label for="profile-email">Email</label>
+                      <input
+                        type="email"
+                        id="profile-email"
+                        name="email"
+                        class="form-control-profile"
+                        readonly
+                      />
+                      <small>Email tidak dapat diubah.</small>
+                    </div>
+                    <div class="detail-group">
+                      <label for="profile-nim">NIM</label>
+                      <input
+                        type="text"
+                        id="profile-nim"
+                        name="nim"
+                        class="form-control-profile"
+                        required
+                      />
+                    </div>
+                    <div class="detail-group">
+                      <label for="profile-faculty">Fakultas</label>
+                      <input
+                        type="text"
+                        id="profile-faculty"
+                        name="fakultas"
+                        class="form-control-profile"
+                        required
+                      />
+                    </div>
+                    <div class="detail-group">
+                      <label for="profile-jenjang">Jenjang Pendidikan</label>
+                      <select
+                        id="profile-jenjang"
+                        name="jenjang_pendidikan"
+                        class="form-control-profile"
+                        required
+                      >
+                        <option value="">Pilih Jenjang</option>
+                        <option value="Sarjana">Sarjana (S1)</option>
+                        <option value="Diploma">Diploma (D3)</option>
+                      </select>
+                    </div>
+                    <div class="detail-group">
+                      <label for="profile-major">Program Studi</label>
+                      <input
+                        type="text"
+                        id="profile-major"
+                        name="program_studi"
+                        class="form-control-profile"
+                        required
+                      />
+                    </div>
+                    <div class="detail-group">
+                      <label for="profile-year">Angkatan</label>
+                      <input
+                        type="text"
+                        id="profile-year"
+                        name="angkatan"
+                        class="form-control-profile"
+                        required
+                      />
+                    </div>
+                    <div class="detail-group full-width profile-actions">
+                      <button
+                        type="button"
+                        id="edit-profile-btn"
+                        class="btn btn-secondary"
+                      >
+                        Edit Profil
+                      </button>
+
+                      <button
+                        type="submit"
+                        id="save-profile-btn"
+                        class="btn btn-primary"
+                      >
+                        Simpan Perubahan
+                      </button>
+                      <button
+                        type="button"
+                        id="cancel-edit-btn"
+                        class="btn btn-outline"
+                      >
+                        Batal
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <div class="account-actions-container">
+                <h3>Tindakan Akun</h3>
+
+                <div class="action-item">
+                  <div class="action-info">
+                    <h4>Ubah Password</h4>
+                    <p>Ganti password Anda secara berkala untuk keamanan.</p>
+                  </div>
+                  <button
+                    class="btn btn-secondary"
+                    id="open-change-password-modal-btn"
+                  >
+                    Ubah Password
+                  </button>
+                </div>
+
+                <div class="action-item">
+                  <div class="action-info">
+                    <h4>Hapus Akun</h4>
+                    <p>
+                      Tindakan ini tidak dapat diurungkan dan akan menghapus
+                      semua data Anda secara permanen.
+                    </p>
+                  </div>
+                  <button
+                    class="btn btn-danger"
+                    id="open-delete-account-modal-btn"
+                  >
+                    Hapus Akun
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <div id="change-password-modal" class="modal-overlay">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h2>Ubah Password</h2>
+                <button class="close-button">&times;</button>
+              </div>
+              <form id="change-password-form" class="skp-form">
+                <div class="modal-body">
+                  <div class="form-group">
+                    <label for="old-password">Password Lama</label>
+                    <div class="password-input-wrapper">
+                      <input
+                        type="password"
+                        id="old-password"
+                        name="oldPassword"
+                        class="form-control"
+                        required
+                      />
+                      <i class="fas fa-eye password-toggle-icon"></i>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="new-password">Password Baru</label>
+                    <div class="password-input-wrapper">
+                      <input
+                        type="password"
+                        id="new-password"
+                        name="newPassword"
+                        class="form-control"
+                        required
+                      />
+                      <i class="fas fa-eye password-toggle-icon"></i>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="confirm-password"
+                      >Konfirmasi Password Baru</label
+                    >
+                    <div class="password-input-wrapper">
+                      <input
+                        type="password"
+                        id="confirm-password"
+                        name="confirmPassword"
+                        class="form-control"
+                        required
+                      />
+                      <i class="fas fa-eye password-toggle-icon"></i>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-outline close-btn">
+                    Batal
+                  </button>
+                  <button type="submit" class="btn btn-primary">
+                    Simpan Password Baru
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <div id="delete-account-modal" class="modal-overlay">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h2>Konfirmasi Hapus Akun</h2>
+                <button class="close-button">&times;</button>
+              </div>
+              <form id="delete-account-form" class="skp-form">
+                <div class="modal-body">
+                  <p>
+                    Ini adalah tindakan permanen. Untuk melanjutkan, harap
+                    masukkan password Anda saat ini.
+                  </p>
+                  <div class="form-group">
+                    <label for="delete-confirm-password">Password Anda</label>
+                    <div class="password-input-wrapper">
+                      <input
+                        type="password"
+                        id="delete-confirm-password"
+                        name="password"
+                        class="form-control"
+                        required
+                      />
+                      <i class="fas fa-eye password-toggle-icon"></i>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-outline close-btn">
+                    Batal
+                  </button>
+                  <button type="submit" class="btn btn-danger">
+                    Ya, Hapus Akun Saya
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- Settings Section -->
+          <section id="information" class="content-section">
+            <p class="section-subtitle">
+              Gunakan filter untuk mencari kegiatan dan melihat poin yang bisa
+              Anda dapatkan.
+            </p>
+            <div class="filter-container">
+              <div class="filter-group">
+                <i class="fas fa-search filter-icon"></i>
+                <input
+                  type="text"
+                  id="info-search-input"
+                  class="filter-input"
+                  placeholder="Cari berdasarkan nama kegiatan atau tingkat..."
+                />
+              </div>
+              <div class="filter-group">
+                <i class="fas fa-tags filter-icon"></i>
+                <select id="info-category-filter" class="filter-select">
+                  <option value="all">Semua Kategori</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="history-table-container">
+              <table class="history-table">
+                <thead>
+                  <tr>
+                    <th style="width: 5%">No</th>
+                    <th>Kegiatan</th>
+                    <th>Tingkat / Jabatan</th>
+                    <th style="width: 15%; text-align: center">Bobot Poin</th>
+                  </tr>
+                </thead>
+                <tbody id="information-table-body">
+                  <tr>
+                    <td colspan="4" style="text-align: center; padding: 2rem">
+                      Memuat data poin SKP...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <!-- Scripts are now loaded as modules -->
+    <script type="module" src="js/dashboard.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://unpkg.com/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.js"></script>
+  </body>
+</html>
