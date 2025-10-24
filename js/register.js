@@ -51,12 +51,29 @@ document.addEventListener("DOMContentLoaded", () => {
     const confirmPassword = document.getElementById('confirm-password').value;
 
     // 1. Validasi
+    const emailRegex = /^\d+@student\.unsika\.ac\.id$/;
+    if (!emailRegex.test(email)) {
+      showAlert('Pendaftaran gagal. Gunakan email Unsika yang valid', 'error');
+      return;
+    }
+
     if (password !== confirmPassword) {
       showAlert('Konfirmasi password tidak cocok!', 'error');
       return;
     }
     if (!name || !email || !password) {
       showAlert('Harap isi semua field!', 'error');
+      return;
+    }
+
+    if (password.length < 8) {
+      showAlert('Password harus memiliki minimal 8 karakter!', 'error');
+      return;
+    }
+
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/;
+    if (!passwordRegex.test(password)) {
+      showAlert('Password harus mengandung minimal satu huruf besar, satu huruf kecil, dan satu angka!', 'error');
       return;
     }
 

@@ -1048,7 +1048,31 @@ function initializeAccountActions() {
     };
 
     // Event listener untuk membuka modal
-    document.getElementById('open-change-password-modal-btn').addEventListener('click', () => toggleModal(changePasswordModal, true));
+    document.getElementById('open-change-password-modal-btn').addEventListener('click', () => {
+        const userData = JSON.parse(localStorage.getItem('skp_user'));
+
+        // Ambil elemen-elemen modal yang relevan
+        const oldPasswordGroup = document.getElementById('old-password').closest('.form-group');
+        const oldPasswordInput = document.getElementById('old-password');
+        const modalTitle = changePasswordModal.querySelector('.modal-header h2');
+
+        if (userData && userData.auth_provider === 'google') {
+            // --- UNTUK PENGGUNA GOOGLE ---
+            modalTitle.textContent = 'Atur Password Lokal'; // Ubah judul
+            oldPasswordGroup.style.display = 'none'; // Sembunyikan field password lama
+            oldPasswordInput.required = false; // Hapus atribut 'required' agar form bisa disubmit
+
+        } else {
+            // --- UNTUK PENGGUNA LOKAL (BIASA) ---
+            modalTitle.textContent = 'Ubah Password'; // Judul normal
+            oldPasswordGroup.style.display = 'block'; // Pastikan field terlihat
+            oldPasswordInput.required = true; // Pastikan field ini wajib diisi
+        }
+
+        // Tampilkan modal setelah diatur
+        toggleModal(changePasswordModal, true);
+    });
+
     document.getElementById('open-delete-account-modal-btn').addEventListener('click', () => toggleModal(deleteAccountModal, true));
 
     // Event listener untuk menutup modal
@@ -1064,6 +1088,12 @@ function initializeAccountActions() {
         e.preventDefault();
         const formData = new FormData(e.target);
         const data = Object.fromEntries(formData.entries());
+        const userData = JSON.parse(localStorage.getItem('skp_user')); // Ambil data user
+        const token = localStorage.getItem('jwtToken');
+
+        if (userData && userData.auth_provider === 'google') {
+            delete data.oldPassword;
+        }
 
         try {
             const response = await fetch('http://localhost:3000/api/users/me/password', {
@@ -1090,6 +1120,7 @@ function initializeAccountActions() {
         const formData = new FormData(e.target);
         const data = Object.fromEntries(formData.entries());
 
+
         try {
             const response = await fetch('http://localhost:3000/api/users/me', {
                 method: 'POST',
@@ -1100,7 +1131,10 @@ function initializeAccountActions() {
             if (!response.ok) throw new Error(result.message);
 
             alert(result.message);
-            handleLogout(token); // Logout dan redirect
+            console.log('Akun dihapus, membersihkan localStorage dan redirect...');
+            localStorage.removeItem('jwtToken');
+            localStorage.removeItem('skp_user');
+            window.location.href = 'login.html';
         } catch (error) {
             alert(`Error: ${error.message}`);
         }

@@ -1,0 +1,2 @@
+# Membuat file .gitignore di dalam folder backend dan menambahkan .env ke dalamnya
+echo ".env" >> project_skp_api/.gitignore
