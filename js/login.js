@@ -45,12 +45,6 @@ document.addEventListener('DOMContentLoaded', function () {
         window.history.replaceState({}, document.title, "/login.html");
     }
 
-    // Data dummy untuk simulasi login tradisional
-    const validUsers = [
-        { username: 'admin', password: 'admin123', role: 'admin' },
-        { username: 'mahasiswa', password: 'mhs123', role: 'mahasiswa' },
-        { username: '202301001', password: 'unsika123', role: 'mahasiswa' }
-    ];
 
     // Cek jika user sudah login
     const savedToken = localStorage.getItem('jwtToken');
