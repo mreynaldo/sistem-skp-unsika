@@ -1,3 +1,12 @@
+let apiBaseUrl;
+if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    apiBaseUrl = 'http://localhost:3000'; 
+    console.log('Running in local environment, using local API.');
+} else {
+    // Lingkungan Live (misalnya Netlify)
+    apiBaseUrl = 'https://sistem-skp-unsika-production.up.railway.app'; 
+    console.log('Running in live environment, using deployed API.');
+}
 let fullHistory = [];
 let allSkpPointsMaster = [];
 
@@ -45,7 +54,7 @@ async function loadDashboardData() {
     }
 
     try {
-        const response = await fetch('http://localhost:3000/api/submissions/my-submissions', {
+        const response = await fetch('${apiBaseUrl}/api/submissions/my-submissions', {
             method: 'GET',
             headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -285,7 +294,7 @@ function initializeLogout(jwtToken) {
 }
 
 async function handleLogout(token) {
-    const API_URL_LOGOUT = 'http://localhost:3000/api/auth/logout';
+    const API_URL_LOGOUT = '${apiBaseUrl}/api/auth/logout';
 
     try {
         const response = await fetch(API_URL_LOGOUT, {
@@ -436,7 +445,7 @@ function initializeSubmissionForm() {
     }
 
     // Ambil data dari API
-    fetch('http://localhost:3000/api/skp', {
+    fetch('${apiBaseUrl}/api/skp', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -572,7 +581,7 @@ function initializeSubmissionHandler() {
         let success = false;     // Untuk menandai fetch berhasil
 
         try {
-            const response = await fetch('http://localhost:3000/api/submissions', {
+            const response = await fetch('${apiBaseUrl}/api/submissions', {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` }, 
                 body: formData
@@ -795,7 +804,7 @@ function initializeProfileFormHandler() {
         const updatedData = Object.fromEntries(formData.entries());
 
         try {
-            const response = await fetch(`http://localhost:3000/api/users/${userData.id}`, {
+            const response = await fetch(`${apiBaseUrl}/api/users/${userData.id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -1052,7 +1061,7 @@ function initializePrintReportButton() {
 
             // Baris Rincian
             entriesInCategory.forEach(entry => {
-                const buktiLink = entry.bukti_file ? `http://localhost:3000/${entry.bukti_file.replace(/\\/g, '/')}` : null;
+                const buktiLink = entry.bukti_file ? `${apiBaseUrl}/${entry.bukti_file.replace(/\\/g, '/')}` : null;
                 body.push([
                     '',
                     `${entry.tingkat}`,
@@ -1196,7 +1205,7 @@ function initializeAccountActions() {
         }
 
         try {
-            const response = await fetch('http://localhost:3000/api/users/me/password', {
+            const response = await fetch('${apiBaseUrl}/api/users/me/password', {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify(data)
@@ -1251,7 +1260,7 @@ function initializeAccountActions() {
             if (result.isConfirmed) {
                 // HANYA jika dikonfirmasi, lanjutkan fetch
                 try {
-                    const response = await fetch('http://localhost:3000/api/users/me', { // Pastikan URL benar
+                    const response = await fetch('${apiBaseUrl}/api/users/me', { // Pastikan URL benar
                         method: 'POST', // Pastikan method benar
                         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                         body: JSON.stringify(data) // Kirim data form yang sudah diambil tadi

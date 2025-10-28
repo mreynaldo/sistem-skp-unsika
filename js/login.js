@@ -1,3 +1,12 @@
+let apiBaseUrl;
+if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    apiBaseUrl = 'http://localhost:3000'; 
+    console.log('Running in local environment, using local API.');
+} else {
+    apiBaseUrl = 'https://sistem-skp-unsika-production.up.railway.app'; 
+    console.log('Running in live environment, using deployed API.');
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     const loginForm = document.getElementById('login-form');
     const urlParams = new URLSearchParams(window.location.search);
@@ -90,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function () {
         submitBtn.innerHTML = '<div class="loading-spinner"></div> Memproses...';
         submitBtn.disabled = true;
 
-        const API_URL = 'http://localhost:3000/api/auth/login'; // <-- Ganti dengan URL API Anda
+        const API_URL = '${apiBaseUrl}/api/auth/login'; // <-- Ganti dengan URL API Anda
 
         try {
             const response = await fetch(API_URL, {

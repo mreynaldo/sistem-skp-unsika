@@ -3,18 +3,14 @@ const skpModel = require('../models/skpModel');
 
 exports.createSubmission = async (req, res) => {
     try {
-        const id_mahasiswa = req.user.id; // Ambil ID mahasiswa dari token JWT
-        // Data form (non-file) sekarang ada di req.body
+        const id_mahasiswa = req.user.id; 
         const { id_skp_point, deskripsi_kegiatan, tanggal_kegiatan } = req.body;
-
-        // Path file yang di-upload ada di req.file
-        const bukti_file_path = req.file ? req.file.path : null;
+        const bukti_file_url = req.file ? req.file.path : null;
 
         if (!id_skp_point || !deskripsi_kegiatan || !tanggal_kegiatan) {
             return res.status(400).json({ message: 'ID Poin SKP, deskripsi, dan tanggal kegiatan wajib diisi' });
         }
 
-        // Ambil data poin dari master skp_points untuk keamanan
         const skpPointRule = await skpModel.getSkpPointById(id_skp_point);
         if (!skpPointRule) {
             return res.status(404).json({ message: 'Aturan Poin SKP tidak ditemukan.' });
@@ -25,7 +21,7 @@ exports.createSubmission = async (req, res) => {
             id_skp_point,
             deskripsi_kegiatan,
             tanggal_kegiatan,
-            bukti_file: bukti_file_path,// Opsional
+            bukti_file: bukti_file_url,
             poin_saat_pengajuan: skpPointRule.bobot_poin // Ambil poin dari database, bukan dari input user
         };
 
@@ -33,7 +29,14 @@ exports.createSubmission = async (req, res) => {
         res.status(201).json({ message: 'Pengajuan SKP berhasil dibuat', submissionId: newSubmissionId });
 
     } catch (error) {
-        res.status(500).json({ message: 'Error saat membuat pengajuan', error: error.message });
+        console.error("Error saat createSubmission:", error);
+        if (error.message.includes('Tipe file tidak diizinkan')) {
+              return res.status(400).json({ message: error.message });
+         }
+         if (error instanceof multer.MulterError && error.code === 'LIMIT_FILE_SIZE') {
+             return res.status(400).json({ message: 'Ukuran file terlalu besar. Maksimal 5MB.'});
+         }
+        res.status(500).json({ message: 'Error saat membuat pengajuan', error: 'Terjadi kesalahan internal.' });
     }
 };
 

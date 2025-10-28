@@ -1,3 +1,12 @@
+let apiBaseUrl;
+if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    apiBaseUrl = 'http://localhost:3000'; 
+    console.log('Running in local environment, using local API.');
+} else {
+    apiBaseUrl = 'https://sistem-skp-unsika-production.up.railway.app'; 
+    console.log('Running in live environment, using deployed API.');
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   function showAlert(message, type) {
     const existingAlert = document.querySelector('.alert');
@@ -83,7 +92,7 @@ document.addEventListener("DOMContentLoaded", () => {
     submitBtn.innerHTML = '<div class="loading-spinner"></div> Mendaftar...';
     submitBtn.disabled = true;
 
-    const API_URL = 'http://localhost:3000/api/auth/register';
+    const API_URL = '${apiBaseUrl}/api/auth/register';
 
     try {
       // 2. Panggilan API ke Backend

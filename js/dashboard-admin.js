@@ -1,4 +1,12 @@
-// dashboard-admin.js
+let apiBaseUrl;
+if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+  apiBaseUrl = 'http://localhost:3000';
+  console.log('Running in local environment, using local API.');
+} else {
+  // Lingkungan Live (misalnya Netlify)
+  apiBaseUrl = 'https://sistem-skp-unsika-production.up.railway.app';
+  console.log('Running in live environment, using deployed API.');
+}
 let pointsChartInstance = null;
 let statusChartInstance = null;
 let allSkpPoints = [];
@@ -107,7 +115,7 @@ function updateCurrentDate() {
 async function loadAdminData() {
   const token = localStorage.getItem('jwtToken');
   try {
-    const response = await fetch('http://localhost:3000/api/submissions', {
+    const response = await fetch('${apiBaseUrl}/api/submissions', {
       headers: { 'Authorization': `Bearer ${token}` }
     });
     if (!response.ok) throw new Error('Gagal memuat data pengajuan.');
@@ -150,9 +158,15 @@ function populatePendingTable(submissions) {
   pendingSubmissions.forEach(entry => {
     const tr = document.createElement('tr');
     let buktiCellHTML = '<em>Tidak ada</em>';
-    if (entry.bukti_file) {
-      const fileUrl = `http://localhost:3000/${entry.bukti_file.replace(/\\/g, '/')}`;
-      buktiCellHTML = `<button data-file-url="${fileUrl}" class="btn-view-proof">Lihat Bukti</button>`;
+    if (entry.bukti_file && entry.bukti_file.startsWith('http')) { // Cek jika itu URL
+      // BENAR: Gunakan URL dari entry.bukti_file secara langsung
+      const fileUrl = entry.bukti_file;
+      // Tambahkan target="_blank" agar terbuka di tab baru
+      buktiCellHTML = `<button data-file-url="${fileUrl}" class="btn btn-sm btn-info btn-view-proof">Lihat Bukti</button>`;
+    } else if (entry.bukti_file) {
+      // Fallback jika masih path lokal (sebelum Cloudinary) - Opsional
+      const localFileUrl = `${apiBaseUrl}/${entry.bukti_file.replace(/\\/g, '/')}`;
+      buktiCellHTML = `<a href="${localFileUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-secondary">Lihat Bukti (Lokal)</a>`;
     }
 
     tr.innerHTML = `
@@ -301,7 +315,7 @@ async function handleApproval(submissionId, newStatus) {
   }
 
   try {
-    const response = await fetch(`http://localhost:3000/api/submissions/${submissionId}/status`, {
+    const response = await fetch(`${apiBaseUrl}/api/submissions/${submissionId}/status`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -354,7 +368,7 @@ function initializeLogout(jwtToken) {
 }
 
 async function handleLogout(token) {
-  const API_URL_LOGOUT = 'http://localhost:3000/api/auth/logout';
+  const API_URL_LOGOUT = '${apiBaseUrl}/api/auth/logout';
   try {
     await fetch(API_URL_LOGOUT, {
       method: 'POST',
@@ -401,7 +415,7 @@ function initializeSkpManagementEvents() {
 async function loadSkpManagementData() {
   const token = localStorage.getItem('jwtToken');
   try {
-    const response = await fetch('http://localhost:3000/api/skp', {
+    const response = await fetch('${apiBaseUrl}/api/skp', {
       headers: { 'Authorization': `Bearer ${token}` }
     });
     if (!response.ok) throw new Error('Gagal memuat data poin SKP.');
@@ -471,7 +485,7 @@ async function handleSkpFormSubmit(e) {
   };
 
   const isEditing = id !== '';
-  const url = isEditing ? `http://localhost:3000/api/skp/${id}` : 'http://localhost:3000/api/skp';
+  const url = isEditing ? `${apiBaseUrl}/api/skp/${id}` : '${apiBaseUrl}/api/skp';
   const method = isEditing ? 'PUT' : 'POST';
 
   try {
@@ -499,7 +513,7 @@ async function handleDeleteSkpPoint(id) {
 
   const token = localStorage.getItem('jwtToken');
   try {
-    const response = await fetch(`http://localhost:3000/api/skp/${id}`, {
+    const response = await fetch(`${apiBaseUrl}/api/skp/${id}`, {
       method: 'DELETE',
       headers: { 'Authorization': `Bearer ${token}` }
     });
@@ -573,18 +587,18 @@ function showSuggestions(suggestions, query, input, panel) {
 // Mengisi dropdown filter dengan data yang unik
 // FUNGSI BARU
 function populateSkpFilters(points) {
-    const kegiatanFilter = document.getElementById('filter-kegiatan');
-    if (!kegiatanFilter) return;
+  const kegiatanFilter = document.getElementById('filter-kegiatan');
+  if (!kegiatanFilter) return;
 
-    const uniqueKegiatan = [...new Set(points.map(p => p.kegiatan))];
+  const uniqueKegiatan = [...new Set(points.map(p => p.kegiatan))];
 
-    kegiatanFilter.innerHTML = '<option value="all">Semua Jenis Kegiatan</option>';
-    uniqueKegiatan.forEach(k => {
-        kegiatanFilter.innerHTML += `<option value="${k}">${k}</option>`;
-    });
+  kegiatanFilter.innerHTML = '<option value="all">Semua Jenis Kegiatan</option>';
+  uniqueKegiatan.forEach(k => {
+    kegiatanFilter.innerHTML += `<option value="${k}">${k}</option>`;
+  });
 
-    // Nonaktifkan filter tingkat saat pertama kali dimuat
-    document.getElementById('filter-tingkat').disabled = true;
+  // Nonaktifkan filter tingkat saat pertama kali dimuat
+  document.getElementById('filter-tingkat').disabled = true;
 }
 
 // Menerapkan filter dan menampilkan ulang tabel
@@ -607,42 +621,42 @@ function applySkpFilters() {
 
 // FUNGSI BARU
 function initializeSkpFiltering() {
-    const kegiatanFilter = document.getElementById('filter-kegiatan');
-    const tingkatFilter = document.getElementById('filter-tingkat');
+  const kegiatanFilter = document.getElementById('filter-kegiatan');
+  const tingkatFilter = document.getElementById('filter-tingkat');
 
-    if (kegiatanFilter && tingkatFilter) {
-        // Event listener untuk filter KEGIATAN
-        kegiatanFilter.addEventListener('change', () => {
-            updateTingkatFilter(); 
-            applySkpFilters();    
-        });
+  if (kegiatanFilter && tingkatFilter) {
+    // Event listener untuk filter KEGIATAN
+    kegiatanFilter.addEventListener('change', () => {
+      updateTingkatFilter();
+      applySkpFilters();
+    });
 
-        tingkatFilter.addEventListener('change', applySkpFilters);
-    }
+    tingkatFilter.addEventListener('change', applySkpFilters);
+  }
 }
 
 function updateTingkatFilter() {
-    const kegiatanFilter = document.getElementById('filter-kegiatan');
-    const tingkatFilter = document.getElementById('filter-tingkat');
-    const selectedKegiatan = kegiatanFilter.value;
+  const kegiatanFilter = document.getElementById('filter-kegiatan');
+  const tingkatFilter = document.getElementById('filter-tingkat');
+  const selectedKegiatan = kegiatanFilter.value;
 
-    tingkatFilter.innerHTML = '<option value="all">Semua Tingkatan</option>';
-    
-    if (selectedKegiatan === 'all') {
-        tingkatFilter.disabled = true;
-    } else {
-        // Jika kegiatan spesifik dipilih...
-        const relevantTingkat = allSkpPoints
-            .filter(p => p.kegiatan === selectedKegiatan) // 1. Cari semua yang cocok
-            .map(p => p.tingkat); // 2. Ambil tingkatnya
+  tingkatFilter.innerHTML = '<option value="all">Semua Tingkatan</option>';
 
-        // 3. Ambil nilai unik dan isi dropdown
-        const uniqueTingkat = [...new Set(relevantTingkat)];
-        uniqueTingkat.forEach(t => {
-            tingkatFilter.innerHTML += `<option value="${t}">${t}</option>`;
-        });
+  if (selectedKegiatan === 'all') {
+    tingkatFilter.disabled = true;
+  } else {
+    // Jika kegiatan spesifik dipilih...
+    const relevantTingkat = allSkpPoints
+      .filter(p => p.kegiatan === selectedKegiatan) // 1. Cari semua yang cocok
+      .map(p => p.tingkat); // 2. Ambil tingkatnya
 
-        // Aktifkan kembali filter tingkat
-        tingkatFilter.disabled = false;
-    }
+    // 3. Ambil nilai unik dan isi dropdown
+    const uniqueTingkat = [...new Set(relevantTingkat)];
+    uniqueTingkat.forEach(t => {
+      tingkatFilter.innerHTML += `<option value="${t}">${t}</option>`;
+    });
+
+    // Aktifkan kembali filter tingkat
+    tingkatFilter.disabled = false;
+  }
 }
