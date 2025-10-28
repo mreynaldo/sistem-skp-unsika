@@ -18,7 +18,7 @@ const PORT = process.env.PORT || 3000;
 // Konfigurasi agar frontend bisa mengakses backend
 const corsOptions = {
     // Izinkan semua sumber atau spesifikkan frontend Anda:
-    origin: ['http://127.0.0.1:5500', 'http://localhost:5500'], // Sesuaikan dengan port Live Server Anda
+    origin: ['http://127.0.0.1:5500', 'http://localhost:5500', 'https://autoskp.netlify.app'], // Sesuaikan dengan port Live Server Anda
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true, // Izinkan cookie atau header otorisasi
 };
