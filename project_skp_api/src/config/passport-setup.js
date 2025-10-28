@@ -14,7 +14,7 @@ passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     // 2. Tentukan callback URL (harus SAMA PERSIS dengan yang di Google Console)
-    callbackURL: '/api/auth/google/callback'
+    callbackURL: 'https://sistem-skp-unsika-production.up.railway.app/api/auth/google/callback'
 },
 async (accessToken, refreshToken, profile, done) => {
     // 3. Fungsi ini berjalan setelah Google berhasil memverifikasi user
