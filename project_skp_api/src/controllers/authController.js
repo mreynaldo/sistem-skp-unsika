@@ -97,7 +97,7 @@ exports.login = async (req, res) => {
                 fakultas: user.fakultas,
                 program_studi: user.program_studi,
                 angkatan: user.angkatan,
-                jenjang_pendidikan: user.jenjang_pendidikan, 
+                jenjang_pendidikan: user.jenjang_pendidikan,
                 auth_provider: user.auth_provider
             }
         });
@@ -108,16 +108,13 @@ exports.login = async (req, res) => {
 };
 
 exports.googleLoginCallback = (req, res) => {
-    // Jika Passport (dari passport-setup.js) berhasil, data user akan ada di `req.user`
     if (!req.user) {
-        // Ini seharusnya tidak terjadi jika 'failureRedirect' diset, tapi sebagai pengaman
-        return res.redirect('http://127.0.0.1:5500/login.html?error=authentication-failed');
+        const frontendLoginUrl = process.env.FRONTEND_URL || 'http://127.0.0.1:5500';
+        return res.redirect(`${frontendLoginUrl}/login.html?error=google-auth-failed`);
     }
 
     const user = req.user;
-
-    // Buat token JWT untuk user ini (sama seperti login manual)
-   const userForFrontend = {
+    const userForFrontend = {
         id: user.id,
         name: user.name,
         email: user.email,
@@ -127,18 +124,17 @@ exports.googleLoginCallback = (req, res) => {
         program_studi: user.program_studi,
         angkatan: user.angkatan,
         jenjang_pendidikan: user.jenjang_pendidikan,
-        auth_provider: user.auth_provider // <-- Data penting ini sekarang disertakan
+        auth_provider: user.auth_provider
     };
 
     const token = jwt.sign(userForFrontend, process.env.JWT_SECRET, {
-        expiresIn: '1d' // Token berlaku 1 hari
+        expiresIn: '1d'
     });
 
     const userJson = encodeURIComponent(JSON.stringify(userForFrontend));;
+    const frontendLoginUrl = process.env.FRONTEND_URL || 'http://127.0.0.1:5500';
 
-    // Redirect kembali ke halaman login.html di frontend
-    // Frontend akan mendeteksi parameter ini dan menyelesaikan login
-    res.redirect(`http://127.0.0.1:5500/login.html?token=${token}&user=${userJson}`);
+    res.redirect(`${frontendLoginUrl}/login.html?token=${token}&user=${userJson}`);
 };
 
 exports.logout = async (req, res) => { // HARUS ASYNC

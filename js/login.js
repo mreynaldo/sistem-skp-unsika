@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function () {
         submitBtn.innerHTML = '<div class="loading-spinner"></div> Memproses...';
         submitBtn.disabled = true;
 
-        const API_URL = `${apiBaseUrl}/api/auth/login`; // <-- Ganti dengan URL API Anda
+        const API_URL = `${apiBaseUrl}/api/auth/login`; 
 
         try {
             const response = await fetch(API_URL, {
