@@ -11,6 +11,7 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
   </head>
+
   <body>
     <div class="dashboard-container">
       <!-- Sidebar -->
@@ -258,14 +259,14 @@
                   <input
                     type="file"
                     id="bukti_sertifikat"
-                    name="bukti_sertifikat"
+                    name="bukti_file"
                     class="form-control"
                     accept=".pdf,.jpg,.jpeg,.png"
                     required
                   />
                 </div>
 
-                <button type="submit" class="btn btn-primary">
+                <button type="button" id="submit-skp-btn" class="btn btn-primary">
                   Ajukan Kegiatan
                 </button>
               </form>
@@ -623,7 +624,10 @@
       </main>
     </div>
 
-    <!-- Scripts are now loaded as modules -->
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script type="module" src="js/dashboard.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://unpkg.com/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.js"></script>

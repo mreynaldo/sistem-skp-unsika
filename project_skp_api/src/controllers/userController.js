@@ -96,8 +96,12 @@ exports.changePassword = async (req, res) => {
         }
 
         // 3. Validasi password baru
-        if (!newPassword || newPassword.length < 6) {
-            return res.status(400).json({ message: 'Password baru minimal 6 karakter.' });
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/; // Tambahkan {6,} untuk minimal 6 karakter
+        if (!newPassword || !passwordRegex.test(newPassword)) {
+            // GANTI showAlert DENGAN res.status().json()
+            return res.status(400).json({
+                message: 'Password baru minimal 8 karakter dan harus mengandung huruf besar, huruf kecil, dan angka.'
+            });
         }
         if (newPassword !== confirmPassword) {
             return res.status(400).json({ message: 'Password baru dan konfirmasi tidak cocok.' });

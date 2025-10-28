@@ -123,40 +123,40 @@ function updatePageTitle(title) {
     document.getElementById('page-subtitle').textContent = `Dashboard ${title} - Sistem SKP Unsika`;
 }
 
-function initializeCalculator() {
-    const form = document.getElementById('dashboard-skp-form');
-    const resultSection = document.getElementById('dashboard-result');
+// function initializeCalculator() {
+//     const form = document.getElementById('dashboard-skp-form');
+//     const resultSection = document.getElementById('dashboard-result');
 
-    if (form) {
-        form.addEventListener('submit', function (e) {
-            e.preventDefault();
+//     if (form) {
+//         form.addEventListener('submit', function (e) {
+//             e.preventDefault();
 
-            const activityType = document.getElementById('dashboard-activity-type').value;
-            const activityLevel = document.getElementById('dashboard-activity-level').value;
-            const role = document.getElementById('dashboard-role').value;
-            const duration = parseInt(document.getElementById('dashboard-duration').value);
+//             const activityType = document.getElementById('dashboard-activity-type').value;
+//             const activityLevel = document.getElementById('dashboard-activity-level').value;
+//             const role = document.getElementById('dashboard-role').value;
+//             const duration = parseInt(document.getElementById('dashboard-duration').value);
 
-            if (!activityType || !activityLevel || !role || !duration) {
-                alert('Harap lengkapi semua field!');
-                return;
-            }
+//             if (!activityType || !activityLevel || !role || !duration) {
+//                 alert('Harap lengkapi semua field!');
+//                 return;
+//             }
 
-            const points = calculateSKPPoints(activityType, activityLevel, role, duration);
+//             const points = calculateSKPPoints(activityType, activityLevel, role, duration);
 
-            document.getElementById('dashboard-total-points').textContent = points;
-            document.getElementById('dashboard-result-description').textContent =
-                generateResultDescription(activityType, activityLevel, role, duration, points);
+//             document.getElementById('dashboard-total-points').textContent = points;
+//             document.getElementById('dashboard-result-description').textContent =
+//                 generateResultDescription(activityType, activityLevel, role, duration, points);
 
-            resultSection.style.display = 'block';
+//             resultSection.style.display = 'block';
 
-            // Scroll to result
-            resultSection.scrollIntoView({ behavior: 'smooth' });
+//             // Scroll to result
+//             resultSection.scrollIntoView({ behavior: 'smooth' });
 
-            // Simpan ke riwayat
-            saveToHistory(activityType, activityLevel, role, duration, points);
-        });
-    }
-}
+//             // Simpan ke riwayat
+//             saveToHistory(activityType, activityLevel, role, duration, points);
+//         });
+//     }
+// }
 
 function calculateSKPPoints(type, level, role, duration) {
     let basePoints = 0;
@@ -458,7 +458,11 @@ function initializeSubmissionForm() {
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Terjadi kesalahan saat memuat data SKP. Pastikan Anda sudah login.');
+            Toastify({
+                text: 'Gagal memuat data SKP. Coba refresh halaman.',
+                duration: 5000, close: true, gravity: "top", position: "center",
+                style: { background: "linear-gradient(to right, #FF5F6D, #FFC371)" }
+            }).showToast();
         });
 
     // Fungsi untuk mengisi dropdown Kategori Prestasi
@@ -511,83 +515,155 @@ function initializeSubmissionForm() {
     });
 }
 
-function initializeSubmissionHandler() {
-    const submissionForm = document.getElementById('dashboard-skp-form');
-    if (!submissionForm) return;
+// ==========================================================================
+// ===== GANTI SELURUH FUNGSI initializeSubmissionHandler DENGAN KODE INI =====
+// ==========================================================================
 
-    submissionForm.addEventListener('submit', async function (e) {
-        e.preventDefault();
+function initializeSubmissionHandler() {
+    const submitButton = document.getElementById('submit-skp-btn');
+    const submissionForm = document.getElementById('dashboard-skp-form'); // Tetap butuh referensi form
+
+    if (!submitButton || !submissionForm) {
+        console.error("Tombol submit (#submit-skp-btn) atau form (#dashboard-skp-form) tidak ditemukan.");
+        return;
+    }
+
+    submitButton.addEventListener('click', async function () {
+        console.log("[SUBMIT HANDLER] Tombol diklik.");
 
         const token = localStorage.getItem('jwtToken');
-        const submitButton = this.querySelector('button[type="submit"]');
+        const buttonElement = this; 
 
-        // Ambil data dari form
-        const idSkpPoint = document.getElementById('level_pencapaian').value;
-        const namaKegiatan = document.getElementById('nama_kegiatan').value;
-        const penyelenggara = document.getElementById('penyelenggara').value;
-        const tanggalKegiatan = document.getElementById('tanggal_kegiatan').value;
-        const buktiFile = document.getElementById('bukti_sertifikat').files[0];
+        const idSkpPoint = submissionForm.querySelector('#level_pencapaian').value;
+        const buktiFile = submissionForm.querySelector('#bukti_sertifikat').files[0];
+        const namaKegiatan = submissionForm.querySelector('#nama_kegiatan').value;
+        const penyelenggara = submissionForm.querySelector('#penyelenggara').value;
+        const tanggalKegiatan = submissionForm.querySelector('#tanggal_kegiatan').value;
 
-        // Validasi sederhana
+        // Validasi field teks dasar
+        if (!namaKegiatan || !penyelenggara || !tanggalKegiatan) {
+             Toastify({ text: 'Nama Kegiatan, Penyelenggara, dan Tanggal wajib diisi!', duration: 3000, close: true, gravity: "top", position: "right", style: { background: "linear-gradient(to right, #FF5F6D, #FFC371)" }}).showToast();
+             return;
+        }
         if (!idSkpPoint) {
-            alert('Silakan pilih Kategori dan Level Pencapaian terlebih dahulu.');
+            Toastify({ text: 'Pilih Kategori dan Level Pencapaian!', duration: 3000, close: true, gravity: "top", position: "right", style: { background: "linear-gradient(to right, #FF5F6D, #FFC371)" } }).showToast();
             return;
         }
         if (!buktiFile) {
-            alert('Harap unggah file bukti.');
+            Toastify({ text: 'Harap unggah file bukti!', duration: 3000, close: true, gravity: "top", position: "right", style: { background: "linear-gradient(to right, #FF5F6D, #FFC371)" } }).showToast();
             return;
         }
 
-        // Gabungkan nama kegiatan dan penyelenggara untuk deskripsi yang lebih lengkap
         const deskripsiLengkap = `${namaKegiatan} - diselenggarakan oleh ${penyelenggara}`;
-
-        // Gunakan FormData karena kita mengirim file
-        const formData = new FormData();
+        const formData = new FormData(); 
         formData.append('id_skp_point', idSkpPoint);
         formData.append('deskripsi_kegiatan', deskripsiLengkap);
         formData.append('tanggal_kegiatan', tanggalKegiatan);
-        formData.append('bukti_file', buktiFile);
+        formData.append('bukti_file', buktiFile, buktiFile.name);
+        formData.append('nama_kegiatan', namaKegiatan);
+        formData.append('penyelenggara', penyelenggara);
 
-        // UI feedback: disable tombol saat proses
-        submitButton.disabled = true;
-        submitButton.textContent = 'Mengirim...';
+
+        // --- Kirim ke Server ---
+        buttonElement.disabled = true;
+        buttonElement.textContent = 'Mengirim...';
+
+        let promptResult = null; // Untuk menyimpan hasil SweetAlert
+        let success = false;     // Untuk menandai fetch berhasil
 
         try {
             const response = await fetch('http://localhost:3000/api/submissions', {
                 method: 'POST',
-                headers: {
-                    // PENTING: JANGAN set 'Content-Type'. Browser akan melakukannya otomatis
-                    // dengan boundary yang benar untuk multipart/form-data.
-                    'Authorization': `Bearer ${token}`
-                },
+                headers: { 'Authorization': `Bearer ${token}` }, 
                 body: formData
             });
 
-            const result = await response.json();
+            const result = await response.json(); 
 
-            if (!response.ok) {
-                throw new Error(result.message || 'Gagal mengirim pengajuan.');
+            if (!response.ok) { 
+                throw new Error(result.message || `HTTP error! status: ${response.status}`);
             }
 
-            alert('Pengajuan SKP Anda berhasil dikirim dan sedang menunggu verifikasi!');
-            this.reset(); // Kosongkan form
-            document.getElementById('level_pencapaian').disabled = true; // Reset dropdown
-            document.getElementById('bobot_poin_display').value = '';
+            success = true; 
 
-            // Muat ulang data dashboard untuk update kartu statistik
-            loadDashboardData();
+            promptResult = await Swal.fire({
+                title: 'Berhasil Terkirim!',
+                text: result.message,
+                icon: 'success',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Ajukan Lagi',
+                cancelButtonText: 'Tidak, Kembali ke Overview',
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#6c757d',
+                allowOutsideClick: false, // Mencegah menutup dengan klik di luar
+                allowEscapeKey: false    // Mencegah menutup dengan tombol Esc
+            });
+            console.log("[SUBMIT HANDLER] Swal ditutup. Hasil:", promptResult);
 
         } catch (error) {
-            console.error('Submission error:', error);
-            alert(`Terjadi kesalahan: ${error.message}`);
-        } finally {
-            // Kembalikan tombol ke keadaan semula
-            submitButton.disabled = false;
-            submitButton.textContent = 'Ajukan Kegiatan';
+            // Tangani error fetch atau jika response.ok false
+            console.error('[SUBMIT HANDLER] Error:', error);
+            Toastify({
+                text: `Gagal mengirim: ${error.message}`,
+                duration: 5000, close: true, gravity: "top", position: "right",
+                style: { background: "linear-gradient(to right, #FF5F6D, #FFC371)" }
+            }).showToast();
+            // PENTING: Aktifkan kembali tombol JIKA terjadi error
+            buttonElement.disabled = false;
+            buttonElement.textContent = 'Ajukan Kegiatan';
         }
-    });
-}
 
+        // --- Logika SETELAH SweetAlert Ditutup (hanya jika fetch sukses) ---
+        if (success && promptResult) {
+             // Beri jeda sedikit agar SweetAlert sempat hilang sepenuhnya dari DOM
+             setTimeout(() => {
+
+                // 1. Selalu reset form
+                submissionForm.reset();
+                const levelSelect = submissionForm.querySelector('#level_pencapaian');
+                levelSelect.innerHTML = '<option value="">Pilih Level</option>';
+                levelSelect.disabled = true;
+                submissionForm.querySelector('#bobot_poin_display').value = '';
+
+                // 2. Selalu aktifkan kembali tombol
+                buttonElement.disabled = false;
+                buttonElement.textContent = 'Ajukan Kegiatan';
+
+                // 3. Cek pilihan & navigasi/load data
+                if (!promptResult.isConfirmed) {
+                    // Pindah section manual
+                    document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
+                    document.querySelectorAll('.sidebar-nav .nav-item').forEach(item => item.classList.remove('active'));
+
+                    const overviewSection = document.getElementById('overview');
+                    const overviewNavItem = document.querySelector('.sidebar-nav a[href="#overview"]').parentElement;
+                    if (overviewSection) overviewSection.classList.add('active');
+                    if (overviewNavItem) overviewNavItem.classList.add('active');
+
+                    updatePageTitle('Overview');
+
+                    // Panggil loadDashboardData setelah pindah section, dengan jeda tambahan
+                    setTimeout(() => {
+                        loadDashboardData();
+                    }, 50); // Jeda singkat setelah pindah section
+                } else {
+                    // Muat ulang data dashboard di latar belakang agar data terbaru (misal di riwayat) muncul
+                    // tanpa pindah halaman
+                     setTimeout(() => {
+                        loadDashboardData();
+                    }, 50); 
+                }
+             }, 100); // Jeda 100ms SETELAH SweetAlert ditutup sebelum melakukan aksi
+
+        } else if (success && !promptResult) {
+             // Tetap aktifkan tombol jika terjadi hal aneh
+             buttonElement.disabled = false;
+             buttonElement.textContent = 'Ajukan Kegiatan';
+        }
+        // Jika fetch gagal (success === false), tombol sudah diaktifkan di catch
+
+    }); // Akhir addEventListener 'click'
+}
 
 function initializeCharts() {
     // Ini adalah placeholder untuk integrasi chart library seperti Chart.js
@@ -736,7 +812,16 @@ function initializeProfileFormHandler() {
 
             localStorage.setItem('skp_user', JSON.stringify(result.user));
 
-            alert('Profil berhasil diperbarui!');
+            Toastify({
+                text: "Profil berhasil diperbarui!",
+                duration: 3000,
+                close: true,
+                gravity: "top",
+                position: "center",
+                style: {
+                    background: "linear-gradient(135deg, #28a745, #20c997)",
+                }
+            }).showToast();
 
             loadDashboardData();
             populateProfileSection(result.user);
@@ -745,7 +830,16 @@ function initializeProfileFormHandler() {
             Array.from(profileForm.elements).forEach(el => el.readOnly = true);
 
         } catch (error) {
-            alert(`Error: ${error.message}`);
+            Toastify({
+                text: `Error: ${error.message}`,
+                duration: 4000,
+                close: true,
+                gravity: "top",
+                position: "right",
+                style: {
+                    background: "linear-gradient(to right, #FF5F6D, #FFC371)",
+                }
+            }).showToast();
         } finally {
             submitButton.disabled = false;
             submitButton.textContent = 'Simpan Perubahan';
@@ -1030,15 +1124,24 @@ function initializePrintReportButton() {
 }
 
 // TAMBAHKAN FUNGSI BARU INI di dashboard.js
-function initializeAccountActions() {
-    const token = localStorage.getItem('jwtToken');
+// GANTI SELURUH FUNGSI initializeAccountActions YANG LAMA DENGAN INI:
 
+function initializeAccountActions() {
     // Referensi Elemen
     const changePasswordModal = document.getElementById('change-password-modal');
     const deleteAccountModal = document.getElementById('delete-account-modal');
     const changePasswordForm = document.getElementById('change-password-form');
     const deleteAccountForm = document.getElementById('delete-account-form');
 
+    // Pastikan semua elemen ada sebelum melanjutkan
+    if (!changePasswordModal || !deleteAccountModal || !changePasswordForm || !deleteAccountForm ||
+        !document.getElementById('open-change-password-modal-btn') ||
+        !document.getElementById('open-delete-account-modal-btn')) {
+        console.warn("Elemen untuk Aksi Akun tidak ditemukan sepenuhnya. Melewati inisialisasi.");
+        return; // Hentikan jika elemen penting tidak ada
+    }
+
+    // Fungsi helper untuk modal (tidak berubah)
     const toggleModal = (modal, show) => {
         if (show) {
             modal.classList.add('active');
@@ -1047,48 +1150,45 @@ function initializeAccountActions() {
         }
     };
 
-    // Event listener untuk membuka modal
+    // Event listener untuk membuka modal UBAH PASSWORD (sudah benar)
     document.getElementById('open-change-password-modal-btn').addEventListener('click', () => {
         const userData = JSON.parse(localStorage.getItem('skp_user'));
-
-        // Ambil elemen-elemen modal yang relevan
-        const oldPasswordGroup = document.getElementById('old-password').closest('.form-group');
-        const oldPasswordInput = document.getElementById('old-password');
+        const oldPasswordGroup = changePasswordForm.querySelector('#old-password').closest('.form-group');
+        const oldPasswordInput = changePasswordForm.querySelector('#old-password');
         const modalTitle = changePasswordModal.querySelector('.modal-header h2');
 
         if (userData && userData.auth_provider === 'google') {
-            // --- UNTUK PENGGUNA GOOGLE ---
-            modalTitle.textContent = 'Atur Password Lokal'; // Ubah judul
-            oldPasswordGroup.style.display = 'none'; // Sembunyikan field password lama
-            oldPasswordInput.required = false; // Hapus atribut 'required' agar form bisa disubmit
-
+            modalTitle.textContent = 'Atur Password Lokal';
+            oldPasswordGroup.style.display = 'none';
+            oldPasswordInput.required = false;
         } else {
-            // --- UNTUK PENGGUNA LOKAL (BIASA) ---
-            modalTitle.textContent = 'Ubah Password'; // Judul normal
-            oldPasswordGroup.style.display = 'block'; // Pastikan field terlihat
-            oldPasswordInput.required = true; // Pastikan field ini wajib diisi
+            modalTitle.textContent = 'Ubah Password';
+            oldPasswordGroup.style.display = 'block';
+            oldPasswordInput.required = true;
         }
-
-        // Tampilkan modal setelah diatur
         toggleModal(changePasswordModal, true);
     });
 
+    // Event listener untuk membuka modal HAPUS AKUN (tidak berubah)
     document.getElementById('open-delete-account-modal-btn').addEventListener('click', () => toggleModal(deleteAccountModal, true));
 
-    // Event listener untuk menutup modal
+    // Event listener untuk semua tombol close (tidak berubah)
     document.querySelectorAll('.modal-overlay .close-button, .modal-overlay .close-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             toggleModal(changePasswordModal, false);
             toggleModal(deleteAccountModal, false);
+            // Reset form jika ditutup
+            changePasswordForm.reset();
+            deleteAccountForm.reset();
         });
     });
 
-    // Event listener untuk submit form ubah password
+    // Event listener untuk submit form UBAH PASSWORD (dengan Toastify)
     changePasswordForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
         const data = Object.fromEntries(formData.entries());
-        const userData = JSON.parse(localStorage.getItem('skp_user')); // Ambil data user
+        const userData = JSON.parse(localStorage.getItem('skp_user'));
         const token = localStorage.getItem('jwtToken');
 
         if (userData && userData.auth_provider === 'google') {
@@ -1104,40 +1204,89 @@ function initializeAccountActions() {
             const result = await response.json();
             if (!response.ok) throw new Error(result.message);
 
-            alert(result.message);
+            // Ganti alert sukses dengan Toastify
+            Toastify({
+                text: result.message, // "Password berhasil diubah. Silakan login kembali."
+                duration: 4000,
+                close: true, gravity: "top", position: "center",
+                style: { background: "linear-gradient(135deg, #28a745, #20c997)" },
+                stopOnFocus: true, // Biarkan toast tampil jika kursor di atasnya
+                callback: function () { handleLogout(token); } // Logout SETELAH toast hilang
+            }).showToast();
+
             toggleModal(changePasswordModal, false);
-            handleLogout(token); // Logout paksa untuk keamanan
+            changePasswordForm.reset(); // Reset form setelah sukses
+
         } catch (error) {
-            alert(`Error: ${error.message}`);
+            // Ganti alert error dengan Toastify
+            Toastify({
+                text: `${error.message}`,
+                duration: 5000,
+                close: true, gravity: "top", position: "center",
+                style: { background: "linear-gradient(to right, #FF5F6D)" }
+            }).showToast();
         }
     });
 
-    // Event listener untuk submit form hapus akun
-    deleteAccountForm.addEventListener('submit', async (e) => {
+    // Event listener untuk submit form HAPUS AKUN (dengan SweetAlert2) - VERSI BENAR
+    deleteAccountForm.addEventListener('submit', async (e) => { // Tambahkan async di sini
         e.preventDefault();
-        if (!confirm('PERINGATAN: TINDAKAN INI TIDAK DAPAT DIURUNGKAN. Anda yakin?')) return;
 
-        const formData = new FormData(e.target);
+        // Ambil data form SEBELUM menampilkan konfirmasi
+        const formData = new FormData(deleteAccountForm);
         const data = Object.fromEntries(formData.entries());
+        const token = localStorage.getItem('jwtToken');
 
+        // Tampilkan konfirmasi SweetAlert
+        Swal.fire({
+            title: 'Anda Yakin Ingin Hapus Akun?',
+            text: "Tindakan ini permanen dan tidak dapat diurungkan!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc3545', // Warna Merah Bahaya
+            cancelButtonColor: '#6c757d', // Warna Abu Batal
+            confirmButtonText: 'Ya, Hapus Akun Saya!',
+            cancelButtonText: 'Batal'
+        }).then(async (result) => { // Pastikan async ada di dalam .then() juga
+            if (result.isConfirmed) {
+                // HANYA jika dikonfirmasi, lanjutkan fetch
+                try {
+                    const response = await fetch('http://localhost:3000/api/users/me', { // Pastikan URL benar
+                        method: 'POST', // Pastikan method benar
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                        body: JSON.stringify(data) // Kirim data form yang sudah diambil tadi
+                    });
+                    const deleteResult = await response.json();
+                    if (!response.ok) throw new Error(deleteResult.message);
 
-        try {
-            const response = await fetch('http://localhost:3000/api/users/me', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                body: JSON.stringify(data)
-            });
-            const result = await response.json();
-            if (!response.ok) throw new Error(result.message);
+                    // Notifikasi Sukses SETELAH berhasil hapus
+                    Swal.fire({
+                        title: 'Berhasil Dihapus!',
+                        text: deleteResult.message,
+                        icon: 'success',
+                        confirmButtonColor: '#800020'
+                    }).then(() => {
+                        // Bersihkan localStorage dan redirect SETELAH notifikasi sukses ditutup
+                        console.log('Akun dihapus, membersihkan localStorage dan redirect...');
+                        localStorage.removeItem('jwtToken');
+                        localStorage.removeItem('skp_user');
+                        window.location.href = 'login.html';
+                    });
 
-            alert(result.message);
-            console.log('Akun dihapus, membersihkan localStorage dan redirect...');
-            localStorage.removeItem('jwtToken');
-            localStorage.removeItem('skp_user');
-            window.location.href = 'login.html';
-        } catch (error) {
-            alert(`Error: ${error.message}`);
-        }
+                } catch (error) {
+                    // Notifikasi Error jika GAGAL hapus
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal Menghapus Akun',
+                        text: `${error.message}`,
+                        confirmButtonColor: '#800020'
+                    });
+                }
+            } else {
+                // Jika user klik "Batal", reset form hapus akun
+                deleteAccountForm.reset();
+            }
+        });
     });
 }
 
