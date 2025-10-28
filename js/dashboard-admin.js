@@ -115,7 +115,7 @@ function updateCurrentDate() {
 async function loadAdminData() {
   const token = localStorage.getItem('jwtToken');
   try {
-    const response = await fetch('${apiBaseUrl}/api/submissions', {
+    const response = await fetch(`${apiBaseUrl}/api/submissions`, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
     if (!response.ok) throw new Error('Gagal memuat data pengajuan.');
@@ -368,7 +368,7 @@ function initializeLogout(jwtToken) {
 }
 
 async function handleLogout(token) {
-  const API_URL_LOGOUT = '${apiBaseUrl}/api/auth/logout';
+  const API_URL_LOGOUT = `${apiBaseUrl}/api/auth/logout`;
   try {
     await fetch(API_URL_LOGOUT, {
       method: 'POST',
@@ -415,7 +415,7 @@ function initializeSkpManagementEvents() {
 async function loadSkpManagementData() {
   const token = localStorage.getItem('jwtToken');
   try {
-    const response = await fetch('${apiBaseUrl}/api/skp', {
+    const response = await fetch(`${apiBaseUrl}/api/skp`, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
     if (!response.ok) throw new Error('Gagal memuat data poin SKP.');
@@ -485,7 +485,7 @@ async function handleSkpFormSubmit(e) {
   };
 
   const isEditing = id !== '';
-  const url = isEditing ? `${apiBaseUrl}/api/skp/${id}` : '${apiBaseUrl}/api/skp';
+  const url = isEditing ? `${apiBaseUrl}/api/skp/${id}` : `${apiBaseUrl}/api/skp`;
   const method = isEditing ? 'PUT' : 'POST';
 
   try {

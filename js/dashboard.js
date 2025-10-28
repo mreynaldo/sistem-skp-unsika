@@ -54,7 +54,7 @@ async function loadDashboardData() {
     }
 
     try {
-        const response = await fetch('${apiBaseUrl}/api/submissions/my-submissions', {
+        const response = await fetch(`${apiBaseUrl}/api/submissions/my-submissions`, {
             method: 'GET',
             headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -294,7 +294,7 @@ function initializeLogout(jwtToken) {
 }
 
 async function handleLogout(token) {
-    const API_URL_LOGOUT = '${apiBaseUrl}/api/auth/logout';
+    const API_URL_LOGOUT = `${apiBaseUrl}/api/auth/logout`;
 
     try {
         const response = await fetch(API_URL_LOGOUT, {
@@ -445,7 +445,7 @@ function initializeSubmissionForm() {
     }
 
     // Ambil data dari API
-    fetch('${apiBaseUrl}/api/skp', {
+    fetch(`${apiBaseUrl}/api/skp`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -581,7 +581,7 @@ function initializeSubmissionHandler() {
         let success = false;     // Untuk menandai fetch berhasil
 
         try {
-            const response = await fetch('${apiBaseUrl}/api/submissions', {
+            const response = await fetch(`${apiBaseUrl}/api/submissions`, {
                 method: 'POST',
                 headers: { 'Authorization': `Bearer ${token}` }, 
                 body: formData
@@ -1205,7 +1205,7 @@ function initializeAccountActions() {
         }
 
         try {
-            const response = await fetch('${apiBaseUrl}/api/users/me/password', {
+            const response = await fetch(`${apiBaseUrl}/api/users/me/password`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                 body: JSON.stringify(data)
@@ -1260,7 +1260,7 @@ function initializeAccountActions() {
             if (result.isConfirmed) {
                 // HANYA jika dikonfirmasi, lanjutkan fetch
                 try {
-                    const response = await fetch('${apiBaseUrl}/api/users/me', { // Pastikan URL benar
+                    const response = await fetch(`${apiBaseUrl}/api/users/me`, { // Pastikan URL benar
                         method: 'POST', // Pastikan method benar
                         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
                         body: JSON.stringify(data) // Kirim data form yang sudah diambil tadi

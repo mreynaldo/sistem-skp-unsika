@@ -92,7 +92,7 @@ document.addEventListener("DOMContentLoaded", () => {
     submitBtn.innerHTML = '<div class="loading-spinner"></div> Mendaftar...';
     submitBtn.disabled = true;
 
-    const API_URL = '${apiBaseUrl}/api/auth/register';
+    const API_URL = `${apiBaseUrl}/api/auth/register`;
 
     try {
       // 2. Panggilan API ke Backend
