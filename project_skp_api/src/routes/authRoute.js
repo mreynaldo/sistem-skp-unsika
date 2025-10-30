@@ -27,7 +27,7 @@ router.get('/google',
 // Rute 2: Callback
 router.get('/google/callback',
     passport.authenticate('google', {
-        failureRedirect: 'http://127.0.0.1:5500/login.html?error=google-auth-failed', // Jika user menolak/gagal
+        failureRedirect: 'https://autoskp.netlify.app/login.html?error=google-auth-failed', // Jika user menolak/gagal
         session: false
     }),
     authController.googleLoginCallback
